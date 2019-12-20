@@ -1,0 +1,19 @@
+
+
+plugins {
+    id 'java-library'
+    id "org.springframework.boot" version "2.2.2.RELEASE"
+    id 'com.sourcemuse.mongo' version '1.0.7'
+}
+apply plugin: "io.spring.dependency-management"
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+}

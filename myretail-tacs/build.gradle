@@ -1,19 +1,25 @@
 
-
 plugins {
-    id 'java-library'
+    id 'java'
     id "org.springframework.boot" version "2.2.2.RELEASE"
     id 'com.sourcemuse.mongo' version '1.0.7'
 }
 apply plugin: "io.spring.dependency-management"
+group = 'tacs.myretail'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '12'
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
-
+configurations.all {
+   exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
 dependencies {
-	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
+	implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

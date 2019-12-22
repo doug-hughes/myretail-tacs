@@ -7,7 +7,7 @@ plugins {
 apply plugin: "io.spring.dependency-management"
 group = 'tacs.myretail'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '12'
+sourceCompatibility = JavaVersion.VERSION_12
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
@@ -19,7 +19,17 @@ configurations.all {
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-web"
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-	implementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
+//	implementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
 	implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+//	implementation "org.springframework.boot:spring-boot-starter-data-ldap"
+//	implementation "com.unboundid:unboundid-ldapsdk"
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+task showProjectValues {
+	doLast {
+		project.sourceSets.each {println it}
+//		println "BuildDir: ${project.buildDir}"
+//		project.configurations.each {println it}
+		project.properties.each {println it}
+	}
 }

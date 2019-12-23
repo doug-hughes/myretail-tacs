@@ -1,21 +1,15 @@
 package tacs.myretail;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
-
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class AppConfig extends  AbstractMongoClientConfiguration {
-
-	@Override
-	public MongoClient mongoClient() {
-		return MongoClients.create();
-	}
-
-	@Override
-	protected String getDatabaseName() {
-		return "myretail";
+public class AppConfig {
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.rootUri("http://redsky.target.com/v2/pdp/tcin") //13860428?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics)
+				.build();
 	}
 }

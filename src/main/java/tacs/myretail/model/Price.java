@@ -11,7 +11,7 @@ public class Price {
 	  @Id
 	  private ObjectId id;
 
-	  @Indexed
+	  @Indexed(unique = true)
 	  private long externalId;
 
 	  private BigDecimal value;

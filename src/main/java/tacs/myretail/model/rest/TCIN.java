@@ -12,4 +12,9 @@ public class TCIN {
 	public Product getProduct() {
 		return product;
 	}
+
+	@Override
+	public String toString() {
+		return "TCIN [product=" + product + "]";
+	}
 }

@@ -9,4 +9,9 @@ public class Product {
 	public Item getItem() {
 		return item;
 	}
+
+	@Override
+	public String toString() {
+		return "Product [item=" + item + "]";
+	}
 }

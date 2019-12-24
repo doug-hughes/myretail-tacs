@@ -12,4 +12,8 @@ public class Item {
 	public ProductDescription getProduct_description() {
 		return product_description;
 	}
+	@Override
+	public String toString() {
+		return "Item [tcin=" + tcin + ", product_description=" + product_description + "]";
+	}
 }

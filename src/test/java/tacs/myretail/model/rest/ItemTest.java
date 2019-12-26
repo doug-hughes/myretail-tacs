@@ -49,7 +49,7 @@ public class ItemTest {
 		System.out.println(tcin);
 //		Product p = tcin.getProduct();
 //		System.out.println(p);
-		Item i = tcin.getItem();
+		tacs.myretail.model.rest.ItemResponse.Item i = tcin.getItem();
 		System.out.println(i);
 	}
 }

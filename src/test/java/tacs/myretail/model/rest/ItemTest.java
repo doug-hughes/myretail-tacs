@@ -40,15 +40,16 @@ public class ItemTest {
 
 	// Just example of sending request
 	public void send() {
-		TCIN tcin = webClient.get().uri(builder -> builder.build(13860428))
+		ItemResponse tcin = webClient.get().uri(builder -> builder.build(13860428))
 				.exchange()
-				.flatMap(response -> response.bodyToMono(TCIN.class))
+//				.flatMap(response -> response.bodyToMono(TCIN.class))
+				.flatMap(response -> response.bodyToMono(ItemResponse.class))
 				.block();
 //		System.out.printf("Response: {%s}", clientResponse.toEntity(String.class).block());
 		System.out.println(tcin);
-		Product p = tcin.getProduct();
-		System.out.println(p);
-		Item i = p.getItem();
+//		Product p = tcin.getProduct();
+//		System.out.println(p);
+		Item i = tcin.getItem();
 		System.out.println(i);
 	}
 }

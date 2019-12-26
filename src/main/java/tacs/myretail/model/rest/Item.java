@@ -16,4 +16,19 @@ public class Item {
 	public String toString() {
 		return "Item [tcin=" + tcin + ", product_description=" + product_description + "]";
 	}
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class TCIN {
+		private Product product;
+
+		public Product getProduct() {
+			return product;
+		}
+
+		@Override
+		public String toString() {
+			return "TCIN [product=" + product + "]";
+		}
+	}
+	
 }

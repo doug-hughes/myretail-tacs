@@ -1,9 +1,11 @@
 package tacs.myretail.model;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-@Repository
-interface PriceIF extends CrudRepository<Price, ObjectId> {
+import java.math.BigDecimal;
 
+import org.springframework.stereotype.Repository;
+//{"value": 13.49,"currency_code":"USD"}}
+@Repository
+interface PriceIF {
+	BigDecimal getValue();
+	String getCurrencyCode();
 }

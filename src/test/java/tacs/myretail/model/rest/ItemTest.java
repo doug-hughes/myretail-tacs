@@ -34,6 +34,7 @@ public class ItemTest {
 			System.out.printf("Request: {%s} {%s}", clientRequest.method(), clientRequest.url());
 			clientRequest.headers()
 					.forEach((name, values) -> values.forEach(value -> System.out.printf("{%s}={%s}", name, value)));
+			System.out.println();
 			return Mono.just(clientRequest);
 		});
 	}

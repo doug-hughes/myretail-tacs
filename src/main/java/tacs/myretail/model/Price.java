@@ -10,9 +10,11 @@ public class Price {
 	  @Id
 	  private ObjectId id;
 
-	  private long externalId;
+	  private long tcin;
 
 	  private BigDecimal value;
+	  
+	  private String currency_code;
 
 	public ObjectId getId() {
 		return id;
@@ -22,12 +24,12 @@ public class Price {
 		this.id = id;
 	}
 
-	public long getExternalId() {
-		return externalId;
+	public long getTcin() {
+		return tcin;
 	}
 
-	public void setExternalId(long externalId) {
-		this.externalId = externalId;
+	public void setTcin(long tcin) {
+		this.tcin = tcin;
 	}
 
 	public BigDecimal getValue() {
@@ -37,10 +39,17 @@ public class Price {
 	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
+	
+	public String getCurrencyCode() {
+		return currency_code;
+	}
+	public void setCurrencyCode(String currencyCode) {
+		this.currency_code = currencyCode;
+	}
 
 	@Override
 	public String toString() {
-		return "Price [id=" + id + ", externalId=" + externalId + ", value=" + value + "]";
+		return "Price [id=" + id + ", externalId=" + tcin + ", value=" + value + "]";
 	}
 
 }

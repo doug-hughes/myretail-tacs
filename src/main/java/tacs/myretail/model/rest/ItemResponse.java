@@ -3,6 +3,21 @@ package tacs.myretail.model.rest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Parses the item from the WebClient rest response
+ * 
+ * 	{
+ * 		product: {
+ * 			. . .
+ * 			item: {
+ * 				tcin: <String or Long>
+ * 				product_description: {
+ * 					title: <String>
+ * 					. . .
+ * 				}
+ * 				. . .
+ * 			}
+ * 			. . . 
+ * 		}
+ * }
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ItemResponse {

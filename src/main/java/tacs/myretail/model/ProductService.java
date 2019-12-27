@@ -1,22 +1,40 @@
 package tacs.myretail.model;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import tacs.myretail.model.rest.ItemResponse;
 
 @Service
 public class ProductService {
-	private static Logger log = LogManager.getLogger();
 	@Autowired
-	private PriceIF price;
+	private WebClient productWebClient;
 
-	public PriceIF getPrice() {
-		return price;
+	public Product findByTcin(String tcin) {
+		PriceIF staticPrice = new PriceIF() {
+
+			@Override
+			public BigDecimal getValue() {
+				// TODO Auto-generated method stub
+				return BigDecimal.valueOf(10);
+			}
+
+			@Override
+			public String getCurrencyCode() {
+				// TODO Auto-generated method stub
+				return "USD";
+			}
+			
+		};
+
+		ItemResponse item = this.productWebClient.get().uri(builder -> builder.build(tcin))
+				.exchange()
+				.flatMap(response -> response.bodyToMono(ItemResponse.class))
+				.block();
+		Product product = new Product(item, staticPrice);
+		return product;
 	}
-
-	public void setPrice(PriceIF price) {
-		this.price = price;
-	}
-
 }

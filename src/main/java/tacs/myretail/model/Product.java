@@ -1,8 +1,10 @@
 package tacs.myretail.model;
 
-import tacs.myretail.model.rest.ItemResponse;
-
-//{"id":13860428,"name":"The Big Lebowski (Blu-ray) (Widescreen)","current_price":{"value": 13.49,"currency_code":"USD"}}
+/** 
+ * Provides mash up of external REST source with local pricing
+ * 
+ *
+ */
 public class Product {
 	private long id;
 	private String name;
@@ -12,9 +14,6 @@ public class Product {
 		this.id = id;
 		this.name = name;
 		this.current_price = price;
-	}
-	public Product(ItemResponse item, PriceIF price) {
-		new Product(item.getItem().getTcin(), item.getItem().getProduct_description().getTitle(), price);
 	}
 	public long getId() {
 		return id;

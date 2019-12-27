@@ -8,9 +8,9 @@ package tacs.myretail.model;
 public class Product {
 	private long id;
 	private String name;
-	private PriceIF current_price;
+	private Price current_price;
 	
-	public Product(long id, String name, PriceIF price) {
+	public Product(long id, String name, Price price) {
 		this.id = id;
 		this.name = name;
 		this.current_price = price;
@@ -21,7 +21,7 @@ public class Product {
 	public String getName() {
 		return name;
 	}
-	public PriceIF getCurrent_price() {
+	public Price getCurrent_price() {
 		return current_price;
 	}
 

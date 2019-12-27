@@ -5,16 +5,24 @@ import java.math.BigDecimal;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 @Document
 public class Price {
-	  @Id
-	  private ObjectId id;
+	@Id
+	private ObjectId id;
 
-	  private long tcin;
+	private long tcin;
 
-	  private BigDecimal value;
-	  
-	  private String currency_code;
+	private BigDecimal value;
+
+    // currencyCode the ISO 4217 code of the currency
+	private String currency_code;
+	
+	public Price(long tcin, BigDecimal value, String currency_code) {
+		this.tcin = tcin;
+		this.value = value;
+		this.currency_code = currency_code;
+	}
 
 	public ObjectId getId() {
 		return id;
@@ -39,12 +47,13 @@ public class Price {
 	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
-	
-	public String getCurrencyCode() {
+
+	public String getCurrency_code() {
 		return currency_code;
 	}
-	public void setCurrencyCode(String currencyCode) {
-		this.currency_code = currencyCode;
+
+	public void setCurrency_code(String currency_code) {
+		this.currency_code = currency_code;
 	}
 
 	@Override

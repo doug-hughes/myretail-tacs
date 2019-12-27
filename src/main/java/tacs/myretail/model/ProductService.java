@@ -30,11 +30,11 @@ public class ProductService {
 			
 		};
 
-		ItemResponse item = this.productWebClient.get().uri(builder -> builder.build(tcin))
+		ItemResponse ir = this.productWebClient.get().uri(builder -> builder.build(tcin))
 				.exchange()
 				.flatMap(response -> response.bodyToMono(ItemResponse.class))
 				.block();
-		Product product = new Product(item, staticPrice);
+		Product product = new Product(ir.getTcin(), ir.getTitle(), staticPrice);
 		return product;
 	}
 }

@@ -36,6 +36,14 @@ public class ItemResponse {
 		return this.getProduct().getItem();
 	}
 	
+	public long getTcin() {
+		return this.getItem().getTcin();
+	}
+	
+	public String getTitle() {
+		return this.getItem().getProduct_description().getTitle();
+	}
+	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Product {
 		private Item item;

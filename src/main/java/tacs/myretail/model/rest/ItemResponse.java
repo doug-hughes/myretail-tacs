@@ -36,7 +36,7 @@ public class ItemResponse {
 		return this.getProduct().getItem();
 	}
 	
-	public long getTcin() {
+	public int getTcin() {
 		return this.getItem().getTcin();
 	}
 	
@@ -60,9 +60,9 @@ public class ItemResponse {
 	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Item {
-		private long tcin;
+		private int tcin;
 		private ProductDescription product_description;
-		public long getTcin() {
+		public int getTcin() {
 			return tcin;
 		}
 		public ProductDescription getProduct_description() {

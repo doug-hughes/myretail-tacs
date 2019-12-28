@@ -6,11 +6,11 @@ package tacs.myretail.model;
  *
  */
 public class Product {
-	private long id;
+	private int id;
 	private String name;
 	private Price current_price;
 	
-	public Product(long id, String name, Price price) {
+	public Product(int id, String name, Price price) {
 		this.id = id;
 		this.name = name;
 		this.current_price = price;

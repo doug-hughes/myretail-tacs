@@ -11,14 +11,14 @@ public class Price {
 	@Id
 	private ObjectId id;
 
-	private long tcin;
+	private int tcin;
 
 	private BigDecimal value;
 
     // currencyCode the ISO 4217 code of the currency
 	private String currency_code;
 	
-	public Price(long tcin, BigDecimal value, String currency_code) {
+	public Price(int tcin, BigDecimal value, String currency_code) {
 		this.tcin = tcin;
 		this.value = value;
 		this.currency_code = currency_code;
@@ -32,11 +32,11 @@ public class Price {
 		this.id = id;
 	}
 
-	public long getTcin() {
+	public int getTcin() {
 		return tcin;
 	}
 
-	public void setTcin(long tcin) {
+	public void setTcin(int tcin) {
 		this.tcin = tcin;
 	}
 

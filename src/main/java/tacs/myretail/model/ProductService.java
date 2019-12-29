@@ -1,5 +1,7 @@
 package tacs.myretail.model;
 
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,32 +28,14 @@ public class ProductService {
 		return this.priceRepository;
 	}
 
-	private Price findPriceByTCIN(String tcin) {
-		Price price = getRepository().findByTcin(Long.valueOf(tcin));
+	private Optional<Price> findPriceByTCIN(String tcin) {
+		Optional<Price> price = getRepository().findByTcin(Integer.valueOf(tcin));
 		return price;
 		
 		
 	}
 	public Product findByTcin(String tcin) {
-		
-/*		
-		PriceIF staticPrice = new PriceIF() {
-
-			@Override
-			public BigDecimal getValue() {
-				// TODO Auto-generated method stub
-				return BigDecimal.valueOf(10);
-			}
-
-			@Override
-			public String getCurrencyCode() {
-				// TODO Auto-generated method stub
-				return "USD";
-			}
-			
-		};
-*/
-		Price currentPrice = findPriceByTCIN(tcin);
+		Optional<Price> currentPrice = findPriceByTCIN(tcin);
 		ItemResponse ir = getWebClient().get().uri(builder -> builder.build(tcin))
 				.exchange()
 				.flatMap(response -> response.bodyToMono(ItemResponse.class))

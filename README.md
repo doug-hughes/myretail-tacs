@@ -29,8 +29,7 @@ myRetail was developed with [STS](https://spring.io/tools/sts) with the [Eclipse
 
 To run the project outside of STS:
 
-1.  run the `./gradlew startMongoDb` from the project directory
-2.  run the `./gradlew bootRun` from the project directory
+​	run the `./gradlew startManagedMongoDb bootRun` from the project directory
 
 ##### Decisions
 

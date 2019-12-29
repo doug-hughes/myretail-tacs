@@ -15,10 +15,10 @@ public class Product {
 	private String name;
 	private Optional<Price> current_price;
 	
-	public Product(int id, String name, Optional<Price> price) {
+	public Product(int id, String name, Price price) {
 		this.id = id;
 		this.name = name;
-		this.current_price = price;
+		this.current_price = Optional.ofNullable(price);
 	}
 	public long getId() {
 		return id;

@@ -1,5 +1,7 @@
 package tacs.myretail.rs;
 
+import java.util.NoSuchElementException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,13 @@ public class ProductsRs {
 
 	@GetMapping("/products/{id}")
 	public ResponseEntity<Product> getProduct(@PathVariable(name = "id") String tcin) {
-		Product product = productService.findByTcin(tcin);
-		ResponseEntity<Product> response = ResponseEntity.ok(product);
-		return response;
+		try {
+			Product product = productService.findByTcin(tcin);
+			ResponseEntity<Product> response = ResponseEntity.ok(product);
+			return response;
+		} catch (NoSuchElementException notFound) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);			
+		}
 	}
 
 	@ExceptionHandler(value = { Exception.class })

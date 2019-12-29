@@ -6,7 +6,10 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Document
+@JsonIgnoreProperties(value = {"id", "tcin"})
 public class Price {
 	@Id
 	private ObjectId id;

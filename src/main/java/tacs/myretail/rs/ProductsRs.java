@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tacs.myretail.model.Product;
 import tacs.myretail.model.ProductService;
 
-@RestController
+@RestController()
 public class ProductsRs {
 	@Autowired
 	private ProductService productService;
@@ -19,6 +19,5 @@ public class ProductsRs {
 		Product product = productService.findByTcin(tcin);
 		ResponseEntity<Product> response = ResponseEntity.ok(product);
 		return response;
-//		return 
 	}
 }

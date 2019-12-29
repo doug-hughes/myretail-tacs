@@ -1,5 +1,6 @@
 package tacs.myretail.model.rest;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -100,6 +101,9 @@ public class SearchResponse {
 		public Price getPrice() {
 			return price;
 		}
+		public BigDecimal getCurrentRetail() {
+			return price.getCurrent_retail();
+		}
 
 		@Override
 		public String toString() {
@@ -112,15 +116,15 @@ public class SearchResponse {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Price {
 
-		private double current_retail_min;
+		private BigDecimal current_retail;
 
-		public double getCurrent_retail_min() {
-			return current_retail_min;
+		public BigDecimal getCurrent_retail() {
+			return current_retail;
 		}
 
 		@Override
 		public String toString() {
-			return "Price [current_retail_min=" + current_retail_min + "]";
+			return "Price [current_retail=" + current_retail + "]";
 		}
 	}
 }

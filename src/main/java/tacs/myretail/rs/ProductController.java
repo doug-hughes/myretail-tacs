@@ -17,11 +17,15 @@ import tacs.myretail.model.Product;
 import tacs.myretail.model.ProductService;
 
 @RestController()
-public class ProductsRs {
+public class ProductController {
 	private static final Logger log = LogManager.getLogger();
 	
+	private final ProductService productService;
+	
 	@Autowired
-	private ProductService productService;
+	public ProductController(ProductService productService) {
+		this.productService = productService;
+	}
 	
 	public ProductService getProductService() {
 		return productService;

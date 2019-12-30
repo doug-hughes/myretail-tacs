@@ -11,13 +11,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 //@ContextConfiguration(classes = { ProductService.class })
 public class ProductServiceTest {
 
-	private final ProductService service = new ProductService();
-
 //	private MockMvc mockMvc;
 	@MockBean
 	private PriceRepository priceRepository;
 	@MockBean
 	private WebClient productWebClient;
+	private final ProductService service = new ProductService(productWebClient, priceRepository);
+
 
 //	private MockMvc getMockMvc() {
 //		return this.mockMvc;
@@ -31,7 +31,7 @@ public class ProductServiceTest {
 //		this.mockMvc = MockMvcBuilders.standaloneSetup(service).build();
 	}
 
-	@Test
+	@Test()
 	public void testFindPriceByTCIN_InvalidIdentifier() throws Exception {
 		// Given Mocked Config at end of file annotated with @TestConfiguration
 		// When

@@ -17,11 +17,16 @@ import tacs.myretail.model.rest.ItemResponse;
 @Service
 public class ProductService {
 	private static Logger log = LogManager.getLogger();
-	@Autowired
-	private WebClient productWebClient;
-	@Autowired
-	private PriceRepository priceRepository;
 	
+	private final WebClient productWebClient;
+	
+	private final PriceRepository priceRepository;
+	
+	@Autowired
+	public ProductService(WebClient productWebClient, PriceRepository priceRepository) {
+		this.productWebClient = productWebClient;
+		this.priceRepository = priceRepository;
+	}
 	private WebClient getWebClient() {
 		return this.productWebClient;
 	}

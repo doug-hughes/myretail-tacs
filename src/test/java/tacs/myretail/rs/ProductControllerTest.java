@@ -23,16 +23,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tacs.myretail.model.ProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { ProductsRs.class })
+@ContextConfiguration(classes = { ProductController.class })
 //@WebMvcTest(ProductsRs.class)
-public class ProductsRsTest {
+public class ProductControllerTest {
 	
 	private MockMvc mockMvc;
 	
 	@MockBean
 	private ProductService productService;
 	@Autowired
-	private ProductsRs productsRs;
+	private ProductController productsRs;
 	
 	
 	private MockMvc getMockMvc() {

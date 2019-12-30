@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import tacs.myretail.dev.SearchResponse.Item;
+import tacs.myretail.dev.SearchResponse.Items;
 import tacs.myretail.model.Price;
 import tacs.myretail.model.PriceRepository;
-import tacs.myretail.model.rest.SearchResponse;
-import tacs.myretail.model.rest.SearchResponse.Item;
-import tacs.myretail.model.rest.SearchResponse.Items;
 
 @RestController
 public class DevController {
@@ -28,16 +27,15 @@ public class DevController {
 			@RequestParam(value = "query", defaultValue = "football") String query) {
 		WebClient itemWebClient = WebClient.builder().uriBuilderFactory(new DefaultUriBuilderFactory(REDSKY_TCIN))
 				.build();
-		SearchResponse sr = itemWebClient.get().uri(builder -> builder.queryParam("keyword", query).build())
-				.exchange()
-				.flatMap(r -> r.bodyToMono(SearchResponse.class))
-				.block();
+		SearchResponse sr = itemWebClient.get().uri(builder -> builder.queryParam("keyword", query).build()).exchange()
+				.flatMap(r -> r.bodyToMono(SearchResponse.class)).block();
 		Items qryResults = sr.getSearch_response().getItems();
 		List<Integer> savedTcins = new ArrayList<>();
 		for (Item item : qryResults.getItem()) {
-			
-		Price saved = priceRepository.save(new Price(item.getTcin(), item.getCurrentRetail(), "USD"));
-		savedTcins.add(saved.getTcin());
+			if (item.getTcin() > 0 && item.getCurrentRetail() != null) {
+				Price saved = priceRepository.save(new Price(item.getTcin(), item.getCurrentRetail(), "USD"));
+				savedTcins.add(saved.getTcin());
+			}
 		}
 		ResponseEntity<List<Integer>> response = ResponseEntity.ok(savedTcins);
 		return response;

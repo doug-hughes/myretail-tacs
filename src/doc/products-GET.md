@@ -77,28 +77,21 @@ http://api.myretail.tacs/products/26396662
 
 ```
 
-
-
 ### Error Response
 
 #### Status Code
-403
+`404`
 
 #### Body (application/json)
-
-| Name | Description |
-| ---- | ----------- |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-#### Example
+None
+#### Example (product doesn't exist for provided id)
 ##### URL
-##### Status Code
-##### Body
-
-```json
-
 ```
+http://api.myretail.tacs/products/15117729
+```
+##### Status Code
+
+`404`
+
+##### Body
+None

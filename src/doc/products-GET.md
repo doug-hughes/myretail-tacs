@@ -22,21 +22,20 @@ None
 | Status Code | Denotes           |
 | ----------- | ----------------- |
 | 200         | Success           |
-| 403         | Product not found |
+| 404         | Product not found |
 
 ### Success Response
 #### Status Code
 `200`
 #### Body (application/json)
 
-| Name | Description |
-| ---- | ----------- |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
+| Name          | Description                                 |
+| ------------- | ------------------------------------------- |
+| id            | Unique identifier for the product           |
+| name          | A label for the product                     |
+| current_price | The sale value and currency for the product |
+| value         | The sale value for the product              |
+| currency_code | ISO 4217 code of the currency               |
 #### Example 1 (product found with price)
 ##### URL
 
@@ -65,7 +64,7 @@ http://api.myretail.tacs/products/26396662
 
 ##### URL
 ```
-http://api.myretail.tacs/products/26396662
+http://api.myretail.tacs/products/79144556
 ```
 
 ##### Status Code
@@ -74,31 +73,27 @@ http://api.myretail.tacs/products/26396662
 ##### Body
 
 ```json
-
+{
+    "id": 79144556,
+    "name": "Wilson NCAA ICON Football"
+}
 ```
-
-
 
 ### Error Response
 
 #### Status Code
-403
+`404`
 
 #### Body (application/json)
-
-| Name | Description |
-| ---- | ----------- |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-|      |             |
-#### Example
+None
+#### Example (product doesn't exist for provided id)
 ##### URL
-##### Status Code
-##### Body
-
-```json
-
 ```
+http://api.myretail.tacs/products/15117729
+```
+##### Status Code
+
+`404`
+
+##### Body
+None

@@ -1,4 +1,4 @@
-package tacs.myretail.model.rest;
+package tacs.myretail.dev;
 
 import java.math.BigDecimal;
 import java.util.List;

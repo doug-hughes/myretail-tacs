@@ -1,5 +1,6 @@
 package tacs.myretail.model;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,21 +29,21 @@ public class ProductService {
 		return this.priceRepository;
 	}
 
-	private Optional<Price> findPriceByTCIN(String tcin) {
+	private Optional<Price> findPriceByTCIN(String tcin) throws NumberFormatException{
 		Optional<Price> price = getRepository().findByTcin(Integer.valueOf(tcin));
 		return price;
-		
-		
 	}
-	public Product findByTcin(String tcin) {
-		Optional<Price> currentPrice = findPriceByTCIN(tcin);
-		
-		
+	private ItemResponse findItemByTCIN(String tcin) throws NoSuchElementException{
 		Optional<ItemResponse> ir = getWebClient().get().uri(builder -> builder.build(tcin))
 				.exchange().filter(cr -> cr.statusCode().is2xxSuccessful())
 				.flatMap(response -> response.bodyToMono(ItemResponse.class))
 				.blockOptional();
-		ItemResponse item = ir.orElseThrow();
+		return ir.orElseThrow();
+	}
+	public Product findByTcin(String tcin) {
+		Optional<Price> currentPrice = findPriceByTCIN(tcin);
+		ItemResponse item = findItemByTCIN(tcin);
+
 		Product product = new Product(item.getTcin(), item.getTitle(), currentPrice.orElse(null));
 		return product;
 	}

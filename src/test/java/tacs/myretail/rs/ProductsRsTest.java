@@ -15,7 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,12 +31,12 @@ import tacs.myretail.model.ProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { ProductsRs.class })
-@Import(tacs.myretail.rs.ProductsRsTest.Config.class)
+//@WebMvcTest(ProductsRs.class)
 public class ProductsRsTest {
-
+	
 	private MockMvc mockMvc;
 	
-	@Autowired
+	@MockBean
 	private ProductService productService;
 	@Autowired
 	private ProductsRs productsRs;
@@ -54,7 +56,7 @@ public class ProductsRsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		mockMvc = MockMvcBuilders.standaloneSetup(productsRs).build();
+		this.mockMvc = MockMvcBuilders.standaloneSetup(productsRs).build();
 	}
 
 	@After
@@ -81,24 +83,6 @@ public class ProductsRsTest {
 		// Then
 		getMockMvc().perform(get("/products/c3po")).andExpect(status().isNotFound())
 				.andExpect(jsonPath("$").doesNotExist());
-	}
-
-	@TestConfiguration
-	protected static class Config {
-
-		@Bean
-		public ProductService productService() {
-			return Mockito.mock(ProductService.class);
-		}
-		@Bean
-		public WebClient productWebClient() {
-			return Mockito.mock(WebClient.class);
-		}
-		@Bean
-		public PriceRepository priceRepository() {
-			return Mockito.mock(PriceRepository.class);
-		}
-
 	}
 
 }

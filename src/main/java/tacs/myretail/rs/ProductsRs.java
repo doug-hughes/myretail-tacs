@@ -33,7 +33,7 @@ public class ProductsRs {
 			Product product = getProductService().findByTcin(tcin);
 			ResponseEntity<Product> response = ResponseEntity.ok(product);
 			return response;
-		} catch (NoSuchElementException notFound) {
+		} catch (NoSuchElementException | NumberFormatException notFound) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);			
 		}
 	}

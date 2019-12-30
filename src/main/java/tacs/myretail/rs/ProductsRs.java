@@ -19,13 +19,18 @@ import tacs.myretail.model.ProductService;
 @RestController()
 public class ProductsRs {
 	private static final Logger log = LogManager.getLogger();
+	
 	@Autowired
 	private ProductService productService;
+	
+	public ProductService getProductService() {
+		return productService;
+	}
 
 	@GetMapping("/products/{id}")
 	public ResponseEntity<Product> getProduct(@PathVariable(name = "id") String tcin) {
 		try {
-			Product product = productService.findByTcin(tcin);
+			Product product = getProductService().findByTcin(tcin);
 			ResponseEntity<Product> response = ResponseEntity.ok(product);
 			return response;
 		} catch (NoSuchElementException notFound) {

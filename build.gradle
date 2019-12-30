@@ -34,4 +34,5 @@ task showProjectValues {
 //		project.configurations.each {println it}
 		project.properties.each {println it}
 	}
+bootRun.dependsOn += startManagedMongoDb	
 }

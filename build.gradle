@@ -56,6 +56,9 @@ task showProjectValues {
 		project.properties.each {println it}
 	}
 }
+bootJar {
+    exclude("**/dev/")
+}
 bootRun.dependsOn += startManagedMongoDb
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test

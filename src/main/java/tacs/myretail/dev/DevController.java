@@ -28,7 +28,7 @@ public class DevController {
 	@Autowired
 	private PriceRepository priceRepository;
 
-	@PostMapping(path = "dev/actions/populate")
+	@PostMapping(path = "dev/prices/populate")
 	public ResponseEntity<List<Integer>> populatePricesFromTargetQuery(
 			@RequestParam(value = "query", defaultValue = "football") String query) {
 		WebClient itemWebClient = WebClient.builder().uriBuilderFactory(new DefaultUriBuilderFactory(REDSKY_TCIN))

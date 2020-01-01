@@ -5,9 +5,7 @@ typora-root-url: docs
 # myretail-tacs
 A PoC RESTful service that combines item information with pricing to return products for sale. For our definition a product is a single item combined with zero or more prices with only one price value per currency.
 
-![](/myRetail Logical.svg)
-
-
+![https://github.com/doug-hughes/myretail-tacs/blob/master/docs/myRetail%20Logical.svg](/myRetail Logical.svg)
 
 ##### Scoping Assumptions
 

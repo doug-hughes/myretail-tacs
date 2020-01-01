@@ -13,8 +13,12 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
-configurations.all {
-   exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+    all {
+    	exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 }
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-web"
@@ -27,6 +31,20 @@ dependencies {
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 //	testImplementation "io.projectreactor:reactor-test"
 }
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
 task showProjectValues {
 	doLast {
 		project.sourceSets.each {println it}
@@ -34,5 +52,8 @@ task showProjectValues {
 //		project.configurations.each {println it}
 		project.properties.each {println it}
 	}
-bootRun.dependsOn += startManagedMongoDb	
+bootRun.dependsOn += startManagedMongoDb
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test
+integrationTest.dependsOn += bootRun
 }

@@ -1,38 +1,143 @@
 package tacs.myretail;
 
+import java.math.BigDecimal;
+
+import org.junit.After;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class RestClientTest {
+import tacs.myretail.model.Price;
+import tacs.myretail.model.PriceRepository;
 
+//@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class RestClientTest {
+	
 	@LocalServerPort
 	private int port;
-
 	private WebTestClient webClient;
+	@Autowired
+	PriceRepository priceRepository;
 
-	private WebTestClient getWebClient() {
+	public WebTestClient getWebClient() {
 		return this.webClient;
 	}
 
+	public PriceRepository getPriceRepository() {
+		return this.priceRepository;
+	}
+	
 	@Before
 	public void setUp() throws Exception {
 		this.webClient = WebTestClient.bindToServer().baseUrl("http://localhost:" + this.port).build();
-		// add some prices from remote
-//		getWebClient().post().uri("/dev/actions/populate?query={keyword}", "kittens").exchange().expectStatus().isOk();
+		
+		
+	}
+	@After
+	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void givenItemIdAndPriceExists_ThenReturnSingleProduct() {
+	/**************************** INPUT VALIDATION *******************************/
+	@Test(timeout = 20000)
+	public void givenItemIdLargerThanInteger_ThenReturn404() throws Exception {
+		// Given
+		String id = String.valueOf(Long.MAX_VALUE);
+
+		// Then
+		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody().isEmpty();
+	}
+
+	@Test(timeout = 20000)
+	public void givenItemIdSpace_ThenReturn404() throws Exception {
+		// Given
+		String id = " ";
+
+		// Then
+		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody().isEmpty();
+	}
+
+	@Test(timeout = 20000)
+	public void givenItemIdNotInteger_ThenReturn404() throws Exception {
+		// Given
+		String id = "notinteger";
+
+		// Then
+		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody().isEmpty();
+	}
+
+	@Test(timeout = 20000)
+	public void givenItemIdZero_ThenReturn404() throws Exception {
+		// Given
+		String id = "0";
+
+		// Then
+		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody().isEmpty();
+	}
+	// ============================ NOT OUR CONTROLLER ==============================
+	@Ignore
+	@Test(timeout = 20000)
+	public void givenItemIdNull_ThenReturn404() throws Exception {
+		// Given
+		String id = null;
+
+		// Then
+		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectHeader()
+		.valueEquals("Content-Type", "application/json").expectBody()
+		.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
+	}
+	@Ignore
+	@Test(timeout = 20000)
+	public void givenItemIdEmpty_ThenReturn404() throws Exception {
+		// Given
+		String id = "";
+
+		// Then
+		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectHeader()
+		.valueEquals("Content-Type", "application/json").expectBody()
+		.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
+	}
+	/************************ END INPUT VALIDATION *******************************/
+
+	@Test(timeout = 20000)
+	public void givenItemIdNotExistAndPriceNotExist_ThenReturn404() throws Exception {
+		// Given
+		String id = "15117729";
+
+		// Then
+		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody().isEmpty();
+	}
+
+	@Test(timeout = 20000)
+	public void givenItemIdNotExistAndPriceExists_ThenReturn404() throws Exception {
+
+		// Given
+		String id = "15117729";
+
+		// When
+		BigDecimal value = BigDecimal.valueOf(12.99);
+		Price currentPrice = null;
+		try {
+			currentPrice = getPriceRepository().save(new Price(Integer.valueOf(id), value, "USD"));
+
+			// Then
+			getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody()
+					.isEmpty();
+		} finally {
+			// Cleanup
+			getPriceRepository().delete(currentPrice);
+		}
+	}
+
+	@Test(timeout = 20000)
+	public void givenItemIdAndPriceExists_ThenReturnSingleProduct() throws Exception {
 		// Given
 		String id = "26396662";
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isOk().expectHeader()
@@ -40,8 +145,8 @@ public class RestClientTest {
 				.json("{\"id\":26396662,\"name\":\"Exploding Kittens Game\",\"current_price\":{\"value\":15.99,\"currency_code\":\"USD\"}}");
 	}
 
-	@Test
-	public void givenItemIdAndPriceDoesntExist_ThenReturnSingleProduct() {
+	@Test(timeout = 20000)
+	public void givenItemIdAndPriceDoesntExist_ThenReturnSingleProduct() throws Exception {
 		// Given
 		// When
 		String id = "13860428";

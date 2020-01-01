@@ -29,14 +29,20 @@ None
 `200`
 #### Body (application/json)
 
-| Name          | Description                                 |
-| ------------- | ------------------------------------------- |
-| id            | Unique identifier for the product           |
-| name          | A label for the product                     |
-| current_price | The sale value and currency for the product |
-| value         | The sale value for the product              |
-| currency_code | ISO 4217 code of the currency               |
+| Name                     | Description                                 |
+| ------------------------ | ------------------------------------------- |
+| id                       | Unique identifier for the product           |
+| name                     | A label for the product                     |
+| current_price (optional) | The sale value and currency for the product |
+current_price
+
+| Name          | Description                    |
+| ------------- | ------------------------------ |
+| value         | The sale value for the product |
+| currency_code | ISO 4217 code of the currency  |
+
 #### Example 1 (product found with price)
+
 ##### URL
 
 ```

@@ -29,8 +29,6 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-webflux"
 //	implementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
 	implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
-//	implementation "org.springframework.boot:spring-boot-starter-data-ldap"
-//	implementation "com.unboundid:unboundid-ldapsdk"
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 //	testImplementation "io.projectreactor:reactor-test"
 }

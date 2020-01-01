@@ -20,7 +20,7 @@ import tacs.myretail.model.PriceRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RestClientTest {
-	
+
 	@LocalServerPort
 	private int port;
 	private WebTestClient webClient;
@@ -34,13 +34,13 @@ public class RestClientTest {
 	public PriceRepository getPriceRepository() {
 		return this.priceRepository;
 	}
-	
+
 	@Before
 	public void setUp() throws Exception {
 		this.webClient = WebTestClient.bindToServer().baseUrl("http://localhost:" + this.port).build();
-		
-		
+
 	}
+
 	@After
 	public void tearDown() throws Exception {
 	}
@@ -81,7 +81,8 @@ public class RestClientTest {
 		// Then
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody().isEmpty();
 	}
-	// ============================ NOT OUR CONTROLLER ==============================
+
+	// ============================ NOT OUR CONTROLLER
 	@Ignore
 	@Test(timeout = 20000)
 	public void givenItemIdNull_ThenReturn404() throws Exception {
@@ -90,9 +91,10 @@ public class RestClientTest {
 
 		// Then
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectHeader()
-		.valueEquals("Content-Type", "application/json").expectBody()
-		.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
+				.valueEquals("Content-Type", "application/json").expectBody()
+				.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
 	}
+
 	@Ignore
 	@Test(timeout = 20000)
 	public void givenItemIdEmpty_ThenReturn404() throws Exception {
@@ -101,9 +103,10 @@ public class RestClientTest {
 
 		// Then
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectHeader()
-		.valueEquals("Content-Type", "application/json").expectBody()
-		.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
+				.valueEquals("Content-Type", "application/json").expectBody()
+				.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
 	}
+
 	/************************ END INPUT VALIDATION *******************************/
 
 	@Test(timeout = 20000)
@@ -117,19 +120,20 @@ public class RestClientTest {
 
 	@Test(timeout = 20000)
 	public void givenItemIdNotExistAndPriceExists_ThenReturn404() throws Exception {
-
-		// Given
-		String id = "15117729";
-
-		// When
-		BigDecimal value = BigDecimal.valueOf(12.99);
 		Price currentPrice = null;
 		try {
+
+			// Given
+			String id = "15117729";
+
+			// When
+			BigDecimal value = BigDecimal.valueOf(12.99);
 			currentPrice = getPriceRepository().save(new Price(Integer.valueOf(id), value, "USD"));
 
 			// Then
 			getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody()
 					.isEmpty();
+			
 		} finally {
 			// Cleanup
 			getPriceRepository().delete(currentPrice);
@@ -138,19 +142,32 @@ public class RestClientTest {
 
 	@Test(timeout = 20000)
 	public void givenItemIdAndPriceExists_ThenReturnSingleProduct() throws Exception {
+		Price currentPrice = null;
+		try {
 		// Given
 		String id = "26396662";
+
+		// When
+		BigDecimal value = BigDecimal.valueOf(15.99);
+		currentPrice = getPriceRepository().save(new Price(Integer.valueOf(id), value, "USD"));
+
+		// Then
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isOk().expectHeader()
 				.valueEquals("Content-Type", "application/json").expectBody()
 				.json("{\"id\":26396662,\"name\":\"Exploding Kittens Game\",\"current_price\":{\"value\":15.99,\"currency_code\":\"USD\"}}");
+
+		} finally {
+			// Cleanup
+			getPriceRepository().delete(currentPrice);
+		}
 	}
 
 	@Test(timeout = 20000)
-	public void givenItemIdAndPriceDoesntExist_ThenReturnSingleProduct() throws Exception {
+	public void givenItemIdAndPriceNotExist_ThenReturnSingleProduct() throws Exception {
 		// Given
-		// When
 		String id = "13860428";
 
+		// When
 		// Then
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isOk().expectHeader()
 				.valueEquals("Content-Type", "application/json").expectBody()

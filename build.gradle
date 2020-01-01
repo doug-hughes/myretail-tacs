@@ -16,6 +16,9 @@ repositories {
 configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+    integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
     all {
     	exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
@@ -52,8 +55,10 @@ task showProjectValues {
 //		project.configurations.each {println it}
 		project.properties.each {println it}
 	}
+}
 bootRun.dependsOn += startManagedMongoDb
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
-integrationTest.dependsOn += bootRun
+tasks.withType(Test) {
+    reports.html.destination = file("${reporting.baseDir}/${name}")
 }

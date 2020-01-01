@@ -1,0 +1,361 @@
+{
+	"info": {
+		"_postman_id": "bac02f13-a0b0-451f-81d9-900c63808201",
+		"name": "myRetail",
+		"description": "Technical Assessment Case Study",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get product 13860428",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/products/13860428",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"products",
+						"13860428"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product 77348282",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/products/77348282",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"products",
+						"77348282"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product invalid identifier",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/products/c3po",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"products",
+						"c3po"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product no identifier",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/products/",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product 15117729 doesn't exist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/products/15117729",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"products",
+						"15117729"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product 79144556 doesn't have price",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/products/79144556",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"products",
+						"79144556"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "populate prices from search for 'football'",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/dev/actions/populate",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"dev",
+						"actions",
+						"populate"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "populate prices from search for 'kittens'",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/dev/prices/populate?query=kittens",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"dev",
+						"prices",
+						"populate"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "kittens"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product 26396662",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{server}}:{{port}}/products/26396662",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"products",
+						"26396662"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product 13860428 from target",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://redsky.target.com/v2/pdp/tcin/1?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics",
+					"protocol": "https",
+					"host": [
+						"redsky",
+						"target",
+						"com"
+					],
+					"path": [
+						"v2",
+						"pdp",
+						"tcin",
+						"1"
+					],
+					"query": [
+						{
+							"key": "excludes",
+							"value": "taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product 15117729 from target doesn't exist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://redsky.target.com/v2/pdp/tcin/15117729?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics",
+					"protocol": "https",
+					"host": [
+						"redsky",
+						"target",
+						"com"
+					],
+					"path": [
+						"v2",
+						"pdp",
+						"tcin",
+						"15117729"
+					],
+					"query": [
+						{
+							"key": "excludes",
+							"value": "taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get products from target",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://redsky.target.com/v2/plp/search/?channel=web&count=24&default_purchasability_filter=true&facet_recovery=false&isDLP=false&keyword=football&offset=0&pageId=%2Fs%2Ffootball&pricing_store_id=663&scheduled_delivery_store_id=663&store_ids=663%2C1068%2C1211%2C2449%2C1272&visitorId=016F4998B7530201A7E92CCFB1872770&include_sponsored_search_v2=true&ppatok=AOxT33a&platform=desktop&useragent=Mozilla&key=eb2551e4accc14f38cc42d32fbc2b2ea&excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics\n",
+					"protocol": "https",
+					"host": [
+						"redsky",
+						"target",
+						"com"
+					],
+					"path": [
+						"v2",
+						"plp",
+						"search",
+						""
+					],
+					"query": [
+						{
+							"key": "channel",
+							"value": "web"
+						},
+						{
+							"key": "count",
+							"value": "24"
+						},
+						{
+							"key": "default_purchasability_filter",
+							"value": "true"
+						},
+						{
+							"key": "facet_recovery",
+							"value": "false"
+						},
+						{
+							"key": "isDLP",
+							"value": "false"
+						},
+						{
+							"key": "keyword",
+							"value": "football"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "pageId",
+							"value": "%2Fs%2Ffootball"
+						},
+						{
+							"key": "pricing_store_id",
+							"value": "663"
+						},
+						{
+							"key": "scheduled_delivery_store_id",
+							"value": "663"
+						},
+						{
+							"key": "store_ids",
+							"value": "663%2C1068%2C1211%2C2449%2C1272"
+						},
+						{
+							"key": "visitorId",
+							"value": "016F4998B7530201A7E92CCFB1872770"
+						},
+						{
+							"key": "include_sponsored_search_v2",
+							"value": "true"
+						},
+						{
+							"key": "ppatok",
+							"value": "AOxT33a"
+						},
+						{
+							"key": "platform",
+							"value": "desktop"
+						},
+						{
+							"key": "useragent",
+							"value": "Mozilla"
+						},
+						{
+							"key": "key",
+							"value": "eb2551e4accc14f38cc42d32fbc2b2ea"
+						},
+						{
+							"key": "excludes",
+							"value": "taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics\n"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

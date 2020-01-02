@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -128,7 +129,7 @@ public class RestClientTest {
 
 			// When
 			BigDecimal value = BigDecimal.valueOf(12.99);
-			currentPrice = getPriceRepository().save(new Price(Integer.valueOf(id), value, "USD"));
+			currentPrice = savePrice(new Price(Integer.valueOf(id), value, "USD"));
 
 			// Then
 			getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody()
@@ -136,7 +137,9 @@ public class RestClientTest {
 			
 		} finally {
 			// Cleanup
-			getPriceRepository().delete(currentPrice);
+			if (currentPrice != null) {
+				getPriceRepository().delete(currentPrice);
+			}
 		}
 	}
 
@@ -149,7 +152,7 @@ public class RestClientTest {
 
 		// When
 		BigDecimal value = BigDecimal.valueOf(15.99);
-		currentPrice = getPriceRepository().save(new Price(Integer.valueOf(id), value, "USD"));
+		currentPrice = savePrice(new Price(Integer.valueOf(id), value, "USD"));
 
 		// Then
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isOk().expectHeader()
@@ -158,7 +161,9 @@ public class RestClientTest {
 
 		} finally {
 			// Cleanup
-			getPriceRepository().delete(currentPrice);
+			if (currentPrice != null) {
+				getPriceRepository().delete(currentPrice);
+			}
 		}
 	}
 
@@ -172,5 +177,12 @@ public class RestClientTest {
 		getWebClient().get().uri("/products/{id}", id).exchange().expectStatus().isOk().expectHeader()
 				.valueEquals("Content-Type", "application/json").expectBody()
 				.json("{\"id\":13860428,\"name\":\"The Big Lebowski (Blu-ray)\"}");
+	}
+	private Price savePrice(Price price) {
+		Price savedPrice = null;
+		try {
+			savedPrice = getPriceRepository().save(price);
+		} catch(DuplicateKeyException dke) { /* ignore dups */}
+		return savedPrice;
 	}
 }

@@ -54,8 +54,13 @@ task showProjectValues {
 		project.properties.each {println it}
 	}
 }
+processResources {
+    exclude('**')
+}
 bootJar {
     exclude("**/dev/")
+    exclude("resources/main/application.properties")
+    exclude("resources/main/log4j2-spring.xml")
 }
 bootRun.dependsOn += startManagedMongoDb
 check.dependsOn integrationTest

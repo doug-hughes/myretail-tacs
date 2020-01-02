@@ -77,7 +77,7 @@ If a current_price has not been added for the product it will not contain any pr
 Running in development we can populate some sample data by running
 
 ```
-curl http://localhost:8080/dev/prices/populate?query= -d kittens
+curl http://localhost:8080/dev/prices/populate?query=kittens -X POST
 ```
 
 which will give us a list of identifiers that now have prices

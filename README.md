@@ -72,6 +72,30 @@ which will return
 
 If a current_price has not been added for the product it will not contain any pricing
 
+
+
+Running in development we can populate some sample data by running
+
+```
+curl http://localhost:8080/dev/prices/populate?query= -d kittens
+```
+
+which will give us a list of identifiers that now have prices
+
+```
+[53899693,76455241,16734840,14486932,79194128,53122190,76349158,53183666,76562633]
+```
+
+and now we can get current_price for these identifiers
+
+```
+ curl http://localhost:8080/products/53899693
+```
+
+```
+{"id":53899693,"name":"The Shy Little Kitten Book and Vinyl Record - by  Cathleen Schurr (Mixed media product)","current_price":{"value":8.99,"currency_code":"USD"}}
+```
+
 ##### Technical Stack
 
 SpringBoot

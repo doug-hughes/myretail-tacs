@@ -21,7 +21,6 @@ import reactor.core.publisher.Mono;
 import tacs.myretail.model.Price;
 
 @Configuration
-//@PropertySource(value = "file:myretail.properties", ignoreResourceNotFound = false)
 public class AppConfig {
 	private static final Logger log = LogManager.getLogger();
 	private final String REDSKY_TCIN = "https://redsky.target.com/v2/pdp/tcin/{tcin}?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";

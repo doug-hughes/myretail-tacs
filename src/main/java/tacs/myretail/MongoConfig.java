@@ -1,5 +1,6 @@
 package tacs.myretail;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 
@@ -8,9 +9,10 @@ import com.mongodb.client.MongoClients;
 
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
-	public MongoConfig() {
-	}
-
+	
+	@Value("${mongodb.name}")
+	private String mongoDbName;
+	
 	@Override
 	public MongoClient mongoClient() {
 		return MongoClients.create();
@@ -18,7 +20,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
 	@Override
 	protected String getDatabaseName() {
-		return "myretail";
+		return this.mongoDbName;
 	}
 
 	@Override

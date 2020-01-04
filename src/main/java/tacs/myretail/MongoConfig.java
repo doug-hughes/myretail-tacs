@@ -10,6 +10,7 @@ import com.mongodb.client.MongoClients;
 public class MongoConfig extends AbstractMongoClientConfiguration {
 	public MongoConfig() {
 	}
+
 	@Override
 	public MongoClient mongoClient() {
 		return MongoClients.create();
@@ -18,5 +19,10 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 	@Override
 	protected String getDatabaseName() {
 		return "myretail";
+	}
+
+	@Override
+	protected boolean autoIndexCreation() {
+		return false;
 	}
 }

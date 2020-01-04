@@ -44,9 +44,9 @@ To run the project outside of STS:
 
 The application will need a running [MongoDb](https://www.google.com/aclk?sa=l&ai=DChcSEwii1KyT1OPmAhUUq-wKHW8DA7IYABAAGgJwag&sig=AOD64_0LyvvA3ePBXBi4ZQ0SG1o2LFZcrw&rct=j&q=&ved=2ahUKEwiqtqWT1OPmAhW-GDQIHSxNAJgQ0Qx6BAgKEAE&adurl=) instance running on the localhost at port 27017. To run the development MongoDb instance run `./gradlew startMongoDb`
 
-To run the jar call java with the -jar option and the path to the jar.
+To run the jar call java with the -jar option and the path to the jar. We run java from the project directory so we do not lock the build/libs directory and also so that the /config directory will be used for the application.properties and log4j.xml configuration. We add the jmxremote option so that we can monitor with jconsole or VisualVM
 
-`java -jar myretail-tacs-0.0.1-SNAPSHOT.jar`
+`PS C:\dev\repos\myretail-tacs> &java "-Dcom.sun.management.jmxremote=true" -jar ./build/libs/myretail-tacs-0.0.1-SNAPSHOT.jar`
 
 > "-Dlogging.config=file:./log4j2.xml" can be added to specify a log4j configuration file
 

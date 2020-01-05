@@ -32,7 +32,7 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 	testImplementation "com.squareup.okhttp3:mockwebserver" // couldn't use 4.3 kotlin/TypeCastException NoClassDefFoundError
-//	testImplementation "io.projectreactor:reactor-test"
+	testImplementation "io.projectreactor:reactor-test"
 }
 sourceSets {
     integrationTest {

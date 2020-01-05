@@ -17,9 +17,7 @@ import tacs.myretail.model.rest.ItemResponse;
 @Service
 public class ProductService {
 	private static Logger log = LogManager.getLogger();
-	@Autowired
 	private final WebClient productWebClient;
-	@Autowired
 	private final PriceRepository priceRepository;
 	
 	@Autowired

@@ -41,7 +41,7 @@ public class ItemResponse {
 	}
 	
 	public String getTitle() {
-		return this.getItem().getProduct_description().getTitle();
+		return this.getItem().getTitle();
 	}
 	
 	@JsonIgnoreProperties(ignoreUnknown = true)
@@ -61,6 +61,7 @@ public class ItemResponse {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Item {
 		private int tcin;
+
 		private ProductDescription product_description;
 		public int getTcin() {
 			return tcin;
@@ -68,9 +69,12 @@ public class ItemResponse {
 		public ProductDescription getProduct_description() {
 			return product_description;
 		}
+		public String getTitle() {
+			return this.product_description != null ? this.product_description.getTitle() : "";
+		}
 		@Override
 		public String toString() {
-			return String.format("Item [tcin=%d, product_description=%s]%n",tcin, product_description.getTitle());
+			return String.format("Item [tcin=%d, product_description=%s]%n",tcin, getTitle());
 		}
 	}
 	@JsonIgnoreProperties(ignoreUnknown = true)

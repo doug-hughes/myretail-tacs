@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="[log4j] %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" />
+		</Console>
+	    <Socket name="A1" host="localHost" port="50505">
+            <JsonLayout complete="false" properties="true" locationInfo="true" includeStacktrace="true"
+                stacktraceAsString="true" />	    
+        </Socket>	
+	</Appenders>
+	<Loggers>     <!-- LOG everything at INFO level -->
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="A1" />
+		</Root>     <!-- LOG "tacs.myretail" at TRACE level -->
+		<Logger name="tacs.myretail" level="trace">
+		</Logger>
+		<Logger name="org.mongodb" level="info"/>
+	</Loggers>
+</Configuration>

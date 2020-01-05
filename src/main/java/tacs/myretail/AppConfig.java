@@ -16,6 +16,8 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriBuilderFactory;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import reactor.core.publisher.Mono;
 import tacs.myretail.model.Price;
@@ -23,23 +25,39 @@ import tacs.myretail.model.Price;
 @Configuration
 public class AppConfig {
 	private static final Logger log = LogManager.getLogger();
-	private final String REDSKY_TCIN = "https://redsky.target.com/v2/pdp/tcin/{tcin}?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";
+	private static final String QUERY_FRAGMENT = "excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private MongoMappingContext mongoMappingContext;
 
 
-	@Value("${application.title}")
-	private String appTitle;
+//	@Value("${application.title}")
+//	private String appTitle;
+//	
+//	@Bean String appTitle() {
+//		return this.appTitle;
+//	}
+	@Value("${item.lookup.baseuri}")
+	private String baseUri;
+
+	@Autowired(required = false)
+	private String mockBaseUri;
 	
-	@Bean String appTitle() {
-		return this.appTitle;
+	private String getBaseUri() {
+		log.debug("Lookup query mockUri {}", String.valueOf(this.mockBaseUri));
+		return this.mockBaseUri != null ? this.mockBaseUri : this.baseUri;
 	}
 	
+	private UriBuilderFactory getUriBuilderFactory() {
+		log.debug("Lookup query baseUri {}", getBaseUri());
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(getBaseUri()).path("/v2/pdp/tcin/{tcin}").replaceQuery(QUERY_FRAGMENT);
+		log.debug("Lookup query template {}", uriBuilder.toUriString());
+		return new DefaultUriBuilderFactory(uriBuilder);
+	}
 	@Bean
 	public WebClient productWebClient() {
-		return WebClient.builder().uriBuilderFactory(new DefaultUriBuilderFactory(REDSKY_TCIN)).filter(logRequest())
+		return WebClient.builder().uriBuilderFactory(getUriBuilderFactory()).filter(logRequest())
 				.build();
 	}
 

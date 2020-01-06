@@ -17,26 +17,23 @@ import tacs.myretail.model.rest.ItemResponse;
 @Service
 public class ProductService {
 	private static Logger log = LogManager.getLogger();
-	private final WebClient productWebClient;
-	private final PriceRepository priceRepository;
-	
 	@Autowired
-	public ProductService(WebClient productWebClient, PriceRepository priceRepository) {
-		this.productWebClient = productWebClient;
-		this.priceRepository = priceRepository;
-	}
+	private WebClient productWebClient;
+	@Autowired
+	private PriceRepository priceRepository;
+	
 	private WebClient getWebClient() {
 		return this.productWebClient;
 	}
 	private PriceRepository getRepository() {
 		return this.priceRepository;
 	}
-
-	private Optional<Price> findPriceByTCIN(String tcin) throws NumberFormatException{
+	
+	/*package-private*/ Optional<Price> findPriceByTCIN(String tcin) throws NumberFormatException{
 		Optional<Price> price = getRepository().findByTcin(Integer.valueOf(tcin));
 		return price;
 	}
-	private ItemResponse findItemByTCIN(String tcin) throws NoSuchElementException{
+	/*package-private*/ ItemResponse findItemByTCIN(String tcin) throws NoSuchElementException {
 		Optional<ItemResponse> ir = getWebClient().get().uri(builder -> builder.build(tcin))
 				.exchange().filter(cr -> cr.statusCode().is2xxSuccessful())
 				.flatMap(response -> response.bodyToMono(ItemResponse.class))

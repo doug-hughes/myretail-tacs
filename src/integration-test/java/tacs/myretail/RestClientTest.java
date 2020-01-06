@@ -34,7 +34,7 @@ import tacs.myretail.model.PriceRepository;
 //@RunWith(SpringRunner.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = { Config.class, AppConfig.class, MongoConfig.class, Application.class })
+@ContextConfiguration(classes = { /*Config.class, */AppConfig.class, MongoConfig.class, Application.class })
 public class RestClientTest {
 	private static int mockPort;
 	@LocalServerPort
@@ -245,7 +245,6 @@ public class RestClientTest {
 	static class Config {
 		@Bean
 		public String mockBaseUri() {
-			System.out.println("Creating MockBaseUri Bean");
 			return String.format("http://localhost:%d/", RestClientTest.mockPort);
 		}
 	}

@@ -26,10 +26,6 @@ import tacs.myretail.model.Price;
 public class AppConfig {
 	private static final Logger log = LogManager.getLogger();
 	private static final String QUERY_FRAGMENT = "excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";
-	@Autowired
-	private MongoTemplate mongoTemplate;
-	@Autowired
-	private MongoMappingContext mongoMappingContext;
 
 
 //	@Value("${application.title}")
@@ -69,14 +65,4 @@ public class AppConfig {
 			return Mono.just(clientRequest);
 		});
 	}
-	@EventListener(ApplicationReadyEvent.class)
-	public void initIndicesAfterStartup() {
-
-		IndexOperations indexOps = this.mongoTemplate.indexOps(Price.class);
-
-		IndexResolver resolver = new MongoPersistentEntityIndexResolver(mongoMappingContext);
-		resolver.resolveIndexFor(Price.class).forEach(indexOps::ensureIndex);
-
-	}
-
 }

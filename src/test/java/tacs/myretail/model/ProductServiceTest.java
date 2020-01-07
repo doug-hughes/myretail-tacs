@@ -35,8 +35,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+import reactor.util.function.Tuple2;
 import tacs.myretail.AppConfig;
 import tacs.myretail.model.ProductServiceTest.Config;
+import tacs.myretail.model.rest.ItemResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
@@ -431,6 +435,25 @@ public class ProductServiceTest {
 		assertTrue(product.getCurrent_price().isEmpty());
 		assertEquals("The Big Lebowski (Blu-ray)", product.getName());
 		assertEquals(13860428L, product.getId());
+	}
+
+	@Test
+	public void practiceMono() throws Exception {
+		String id = "13860428";
+		BigDecimal value = BigDecimal.valueOf(15.99);
+		String currency = "JPY";
+		when(getRepository().findByTcin(Mockito.anyInt()))
+				.thenReturn(Optional.of(new Price(Integer.valueOf(id), value, currency)));
+		enqueueValidProduct(getServer());
+		Mono<Tuple2<ItemResponse, Price>> product = getService().getMonoByTcin(id);
+		// Then
+		StepVerifier.create(product).assertNext(ir -> validateItemResponse(ir, 13860428, "The Big Lebowski (Blu-ray)"))
+				.expectComplete().verify();
+	}
+
+	private static void validateItemResponse(Tuple2<ItemResponse, Price> ir, int expectedTcin, String expectedTitle) {
+		assertEquals(expectedTcin, ir.getT1().getTcin());
+		assertEquals(expectedTitle, ir.getT1().getTitle());
 	}
 
 	private static MockResponse jsonResponse(int code) {

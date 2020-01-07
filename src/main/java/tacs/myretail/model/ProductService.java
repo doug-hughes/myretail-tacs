@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 import tacs.myretail.model.rest.ItemResponse;
 
 @Service
@@ -45,6 +47,14 @@ public class ProductService {
 		ItemResponse item = findItemByTCIN(tcin);
 
 		Product product = new Product(item.getTcin(), item.getTitle(), currentPrice.orElse(null));
+		return product;
+	}
+	public Mono<Tuple2<ItemResponse, Price>> getMonoByTcin(String tcin) {
+		Optional<Price> currentPrice = findPriceByTCIN(tcin);
+		ItemResponse item = findItemByTCIN(tcin);
+		Mono<Tuple2<ItemResponse, Price>> product = Mono.just(item).zipWith(Mono.justOrEmpty(currentPrice));
+
+//		Product product = new Product(item.getTcin(), item.getTitle(), currentPrice.orElse(null));
 		return product;
 	}
 	@ExceptionHandler(WebClientResponseException.class)

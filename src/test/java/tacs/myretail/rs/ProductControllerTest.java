@@ -5,9 +5,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.After;
@@ -58,7 +60,6 @@ public class ProductControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
-//		MockitoAnnotations.initMocks(this);
 	}
 
 	@After
@@ -66,7 +67,7 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	public void testGetProduct() throws Exception {
+	public void givenProductWithPrice_WhenGetProduct_ReturnProductWithPriceJson() throws Exception {
 		// Given
 		int id = 13860428;
 		BigDecimal value = BigDecimal.valueOf(15.99);
@@ -82,4 +83,31 @@ public class ProductControllerTest {
         		.string(containsString("{\"id\":13860428,\"name\":\"The Big Lebowski (Blu-ray)\",\"current_price\":{\"value\":15.99,\"currency_code\":\"JPY\"}}")));
 	}
 
+	@Test
+	public void givenProductWithoutPrice_WhenGetProduct_ReturnProductWithoutPriceJson() throws Exception {
+		// Given
+		int id = 13860428;
+		String name = "The Big Lebowski (Blu-ray)";
+		Product product = new Product(id, name, (Price)null);
+		when(getService().findByTcin(Mockito.anyString())).thenReturn(product);
+		
+		// When
+		mockMvc.perform(get("/products/13860428")).andDo(print()).andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content()
+        		.string(containsString("{\"id\":13860428,\"name\":\"The Big Lebowski (Blu-ray)\"}")));
+	}
+
+	@Test
+	public void givenProductNotFound_WhenGetProduct_ReturnNotFound() throws Exception {
+		// Given
+		int id = 13860428;
+		String name = "The Big Lebowski (Blu-ray)";
+		Product product = new Product(id, name, (Price)null);
+		when(getService().findByTcin(Mockito.anyString())).thenThrow(new NoSuchElementException());
+		
+		// When
+		mockMvc.perform(get("/products/13860428")).andDo(print()).andExpect(status().isNotFound());
+        //.andExpect(header()..contentType(MediaType.APPLICATION_JSON));
+	}
 }

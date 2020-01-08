@@ -1,5 +1,11 @@
 package tacs.myretail.model.rest;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Parses the item from the WebClient rest response
@@ -19,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * 		}
  * }
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = false)
 public class ItemResponse {
 	private Product product;
 
@@ -27,24 +33,10 @@ public class ItemResponse {
 		return product;
 	}
 
-	@Override
-	public String toString() {
-		return "TCIN [product=" + product + "]";
-	}
-
 	public Item getItem() {
 		return this.getProduct().getItem();
 	}
 	
-	public int getTcin() {
-		return this.getItem().getTcin();
-	}
-	
-	public String getTitle() {
-		return this.getItem().getTitle();
-	}
-	
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Product {
 		private Item item;
 
@@ -58,31 +50,35 @@ public class ItemResponse {
 		}
 	}
 	
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Item {
-		private int tcin;
+		@JsonAlias(value = {"tcin"})
+		private int id;
 
-		private ProductDescription product_description;
-		public int getTcin() {
-			return tcin;
+//		private ProductDescription product_description;
+		
+		@JsonAnySetter
+		private Map<String, Object> otherFields = new HashMap<>();
+		
+		public int getId() {
+			return this.id;
 		}
-		public ProductDescription getProduct_description() {
-			return product_description;
+//		public void setProduct_description(ProductDescription product_description) {
+//			this.product_description = product_description;
+//		}
+		@SuppressWarnings("unchecked")
+		public String getName() {
+			return otherFields.get("product_description") != null ? ((Map<String, Object>)otherFields.get("product_description")).get("title").toString() : "";
 		}
-		public String getTitle() {
-			return this.product_description != null ? this.product_description.getTitle() : "";
-		}
-		@Override
-		public String toString() {
-			return String.format("Item [tcin=%d, product_description=%s]%n",tcin, getTitle());
-		}
+	    @JsonAnyGetter
+	    public Map<String, Object> getOtherFields() {
+		return this.otherFields;
+	    }
 	}
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class ProductDescription {
-		private String title;
-
-		public String getTitle() {
-			return title;
-		}
-	}
+//	public static class ProductDescription {
+//		private String title;
+//
+//		public String getTitle() {
+//			return title;
+//		}
+//	}
 }

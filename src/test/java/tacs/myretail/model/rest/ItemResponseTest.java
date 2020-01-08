@@ -6,16 +6,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 public class ItemResponseTest {
+	private static Logger log = LogManager.getLogger();
+	private ObjectMapper objectMapper;
+	@SuppressWarnings("unused")
+	private void printJson(Object o) throws JsonProcessingException {
+		log.debug(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o), new Exception("json for " + o.getClass().toString()));
+	}
 
+	@Before
+	public void setUp() throws Exception {
+		objectMapper= new ObjectMapper();
+	}
 	@Test
 	public void given200_whenExtractItemResponse_thenValidItem() throws Exception {
 		// Given
@@ -47,7 +63,7 @@ public class ItemResponseTest {
 		.verify();
 	}
 	private static void validateItemResponse(ItemResponse ir, int expectedTcin, String expectedTitle) {
-		assertEquals(expectedTcin, ir.getTcin());
-		assertEquals(expectedTitle, ir.getTitle());
+		assertEquals(expectedTcin, ir.getItem().getId());
+		assertEquals(expectedTitle, ir.getItem().getName());
 	}
 }

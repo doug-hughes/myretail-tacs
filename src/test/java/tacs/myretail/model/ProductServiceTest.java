@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -33,30 +35,32 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-import reactor.util.function.Tuple2;
 import tacs.myretail.AppConfig;
 import tacs.myretail.model.ProductServiceTest.Config;
-import tacs.myretail.model.rest.ItemResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
 @ContextConfiguration(classes = { Config.class, AppConfig.class, ProductService.class })
 public class ProductServiceTest {
+	private static Logger log = LogManager.getLogger();
 	private static MockWebServer server;
 	private static int mockPort;
 	@MockBean
 	private PriceRepository priceRepository;
 	@Autowired() // use @InjectMocks to include mocking productWebClient
 	private ProductService service;
-
+	private ObjectMapper objectMapper;
 	private ProductService getService() {
 		return this.service;
 	}
-
+	private void printJson(Object o) throws JsonProcessingException {
+		log.debug(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o), new Exception("json for " + o.getClass().toString()));
+	}
 	private PriceRepository getRepository() {
 		return this.priceRepository;
 	}
@@ -82,6 +86,7 @@ public class ProductServiceTest {
 		// Without this method mockbean priceRepository is not available in
 		// ProductService
 		MockitoAnnotations.initMocks(this);
+		objectMapper= new ObjectMapper();
 	}
 
 	/**************************** INPUT VALIDATION *******************************/
@@ -347,11 +352,12 @@ public class ProductServiceTest {
 
 		// When
 		Product product = getService().findByTcin(id);
+		printJson(product);
 
 		// Then
 		assertTrue(product.getCurrent_price().isPresent());
-		assertEquals("The Big Lebowski (Blu-ray)", product.getName());
-		assertEquals(13860428L, product.getId());
+		assertEquals("The Big Lebowski (Blu-ray)", product.getItem().getName());
+		assertEquals(13860428L, product.getItem().getId());
 		assertEquals(value, product.getCurrent_price().get().getValue());
 		assertEquals(currency, product.getCurrent_price().get().getCurrency_code());
 	}
@@ -386,8 +392,8 @@ public class ProductServiceTest {
 
 		// Then
 		assertTrue(product.getCurrent_price().isEmpty());
-		assertEquals("The Big Lebowski (Blu-ray)", product.getName());
-		assertEquals(13860428L, product.getId());
+		assertEquals("The Big Lebowski (Blu-ray)", product.getItem().getName());
+		assertEquals(13860428L, product.getItem().getId());
 	}
 
 	@Test(timeout = 20000)
@@ -433,27 +439,8 @@ public class ProductServiceTest {
 
 		// Then
 		assertTrue(product.getCurrent_price().isEmpty());
-		assertEquals("The Big Lebowski (Blu-ray)", product.getName());
-		assertEquals(13860428L, product.getId());
-	}
-
-	@Test
-	public void practiceMono() throws Exception {
-		String id = "13860428";
-		BigDecimal value = BigDecimal.valueOf(15.99);
-		String currency = "JPY";
-		when(getRepository().findByTcin(Mockito.anyInt()))
-				.thenReturn(Optional.of(new Price(Integer.valueOf(id), value, currency)));
-		enqueueValidProduct(getServer());
-		Mono<Tuple2<ItemResponse, Price>> product = getService().getMonoByTcin(id);
-		// Then
-		StepVerifier.create(product).assertNext(ir -> validateItemResponse(ir, 13860428, "The Big Lebowski (Blu-ray)"))
-				.expectComplete().verify();
-	}
-
-	private static void validateItemResponse(Tuple2<ItemResponse, Price> ir, int expectedTcin, String expectedTitle) {
-		assertEquals(expectedTcin, ir.getT1().getTcin());
-		assertEquals(expectedTitle, ir.getT1().getTitle());
+		assertEquals("The Big Lebowski (Blu-ray)", product.getItem().getName());
+		assertEquals(13860428L, product.getItem().getId());
 	}
 
 	private static MockResponse jsonResponse(int code) {

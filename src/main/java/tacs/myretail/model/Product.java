@@ -3,6 +3,9 @@ package tacs.myretail.model;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import tacs.myretail.model.rest.ItemResponse.Item;
 
 /** 
  * Provides mash up of external REST source with local pricing
@@ -11,20 +14,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Product {
-	private int id;
-	private String name;
+	@JsonUnwrapped
+	private Item item;
 	private Optional<Price> current_price;
 	
-	public Product(int id, String name, Price price) {
-		this.id = id;
-		this.name = name;
+	public Product(Item item, Price price) {
+		this.item = item;
 		this.current_price = Optional.ofNullable(price);
 	}
-	public long getId() {
-		return id;
-	}
-	public String getName() {
-		return name;
+	public Item getItem() {
+		return item;
 	}
 	public Optional<Price> getCurrent_price() {
 		return current_price;

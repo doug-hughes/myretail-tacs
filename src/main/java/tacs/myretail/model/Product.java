@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import tacs.myretail.model.rest.ItemResponse.Item;
+import tacs.myretail.model.rest.Item;
 
 /** 
  * Provides mash up of external REST source with local pricing

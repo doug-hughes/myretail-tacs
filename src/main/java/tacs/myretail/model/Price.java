@@ -27,6 +27,9 @@ public class Price {
 		this.value = value;
 		this.currency_code = currency_code;
 	}
+	public Price() {
+		super();
+	}
 
 	public ObjectId getId() {
 		return id;

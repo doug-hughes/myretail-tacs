@@ -107,31 +107,6 @@ public class RestClientTest {
 		getWebTestClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectBody().isEmpty();
 	}
 
-	// ============================ NOT OUR CONTROLLER
-	@Ignore
-	@Test(timeout = 20000)
-	public void givenItemIdNull_ThenReturn404() throws Exception {
-		// Given
-		String id = null;
-
-		// Then
-		getWebTestClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectHeader()
-				.valueEquals("Content-Type", "application/json").expectBody()
-				.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
-	}
-
-	@Ignore
-	@Test(timeout = 20000)
-	public void givenItemIdEmpty_ThenReturn404() throws Exception {
-		// Given
-		String id = "";
-
-		// Then
-		getWebTestClient().get().uri("/products/{id}", id).exchange().expectStatus().isNotFound().expectHeader()
-				.valueEquals("Content-Type", "application/json").expectBody()
-				.json("{\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/products/\"}");
-	}
-
 	/************************ END INPUT VALIDATION *******************************/
 
 	@Test(timeout = 20000)

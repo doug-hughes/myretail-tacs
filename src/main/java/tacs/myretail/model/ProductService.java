@@ -35,21 +35,25 @@ public class ProductService {
 	}
 	/*package-private*/ ItemResponse findItemByTCIN(String tcin) throws NoSuchElementException {
 		Optional<ItemResponse> ir = getWebClient().get().uri(builder -> builder.build(tcin))
-				.exchange().filter(cr -> cr.statusCode().is2xxSuccessful())
-				.flatMap(response -> response.bodyToMono(ItemResponse.class))
+				.retrieve()
+				.bodyToMono(ItemResponse.class)
 				.blockOptional();
-		return ir.orElseThrow();
+		return ir.get();
 	}
 	public Product findByTcin(String tcin) {
+		try {
 		Optional<Price> currentPrice = findPriceByTCIN(tcin);
 		ItemResponse item = findItemByTCIN(tcin);
 
 		Product product = new Product(item.getItem(), currentPrice.orElse(null));
 		return product;
+		} catch (WebClientResponseException wce) {
+			throw new NoSuchElementException();
+		}
 	}
-	@ExceptionHandler(WebClientResponseException.class)
-	public ResponseEntity<String> handleWebClientResponseException(WebClientResponseException ex) {
-	    log.error("Error from WebClient - Status {}, Body {}", ex.getRawStatusCode(), ex.getResponseBodyAsString(), ex);
-	    return ResponseEntity.status(ex.getRawStatusCode()).body(ex.getResponseBodyAsString());
-	}	
+//	@ExceptionHandler(WebClientResponseException.class)
+//	public ResponseEntity<String> handleWebClientResponseException(WebClientResponseException ex) {
+//	    log.error("Error from WebClient - Status {}, Body {}", ex.getRawStatusCode(), ex.getResponseBodyAsString(), ex);
+//	    return ResponseEntity.status(ex.getRawStatusCode()).body(ex.getResponseBodyAsString());
+//	}	
 }

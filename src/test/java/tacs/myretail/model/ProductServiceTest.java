@@ -1,5 +1,6 @@
 package tacs.myretail.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -31,6 +33,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,8 +46,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 import tacs.myretail.AppConfig;
 import tacs.myretail.model.ProductServiceTest.Config;
+import tacs.myretail.model.rest.ItemResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
@@ -56,12 +64,16 @@ public class ProductServiceTest {
 	@Autowired() // use @InjectMocks to include mocking productWebClient
 	private ProductService service;
 	private ObjectMapper objectMapper;
+
 	private ProductService getService() {
 		return this.service;
 	}
+
 	private void printJson(Object o) throws JsonProcessingException {
-		log.debug(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o), new Exception("json for " + o.getClass().toString()));
+		log.debug(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o),
+				new Exception("json for " + o.getClass().toString()));
 	}
+
 	private PriceRepository getRepository() {
 		return this.priceRepository;
 	}
@@ -87,7 +99,7 @@ public class ProductServiceTest {
 		// Without this method mockbean priceRepository is not available in
 		// ProductService
 		MockitoAnnotations.initMocks(this);
-		objectMapper= new ObjectMapper();
+		objectMapper = new ObjectMapper();
 	}
 
 	/**************************** INPUT VALIDATION *******************************/
@@ -115,15 +127,18 @@ public class ProductServiceTest {
 		enqueueProductNotFound(getServer());
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findItemByTCIN(id);
-			}
-		};
+		Mono<ItemResponse> itemResponse = getService().findItemByTCIN(id);
 
 		// Then
-		assertThatExceptionOfType(WebClientResponseException.class).isThrownBy(tc);
+		StepVerifier.create(itemResponse).expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+		}).verify();
 	}
 
 	@Test(timeout = 20000)
@@ -150,15 +165,20 @@ public class ProductServiceTest {
 		getServer().enqueue(jsonResponse(404).setBody("{\"product\":{\"item\":{}}}"));
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findItemByTCIN(id);
-			}
-		};
+		Mono<ItemResponse> itemResponse = getService().findItemByTCIN(id);
 
 		// Then
-		assertThatExceptionOfType(WebClientResponseException.class).isThrownBy(tc);
+		StepVerifier.create(itemResponse)
+		.expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+			})
+		.verify();
 	}
 
 	@Test(timeout = 20000)
@@ -185,15 +205,20 @@ public class ProductServiceTest {
 		getServer().enqueue(jsonResponse(404).setBody("{\"product\":{\"item\":{}}}"));
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findItemByTCIN(id);
-			}
-		};
+		Mono<ItemResponse> itemResponse = getService().findItemByTCIN(id);
 
 		// Then
-		assertThatExceptionOfType(WebClientResponseException.class).isThrownBy(tc);
+		StepVerifier.create(itemResponse)
+		.expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+			})
+		.verify();
 	}
 
 	@Test(timeout = 20000)
@@ -216,15 +241,20 @@ public class ProductServiceTest {
 		getServer().enqueue(jsonResponse(404).setBody("{\"product\":{\"item\":{}}}"));
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findItemByTCIN(id);
-			}
-		};
+		Mono<ItemResponse> itemResponse = getService().findItemByTCIN(id);
 
 		// Then
-		assertThatExceptionOfType(WebClientResponseException.class).isThrownBy(tc);
+		StepVerifier.create(itemResponse)
+		.expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+			})
+		.verify();
 	}
 
 	// ============================ NOT OUR CONTROLLER
@@ -252,15 +282,20 @@ public class ProductServiceTest {
 		getServer().enqueue(jsonResponse(404).setBody("{\"product\":{\"item\":{}}}"));
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findItemByTCIN(id);
-			}
-		};
+		Mono<ItemResponse> itemResponse = getService().findItemByTCIN(id);
 
 		// Then
-		assertThatExceptionOfType(WebClientResponseException.class).isThrownBy(tc);
+		StepVerifier.create(itemResponse)
+		.expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+			})
+		.verify();
 	}
 
 	@Test(timeout = 20000)
@@ -287,15 +322,18 @@ public class ProductServiceTest {
 		getServer().enqueue(jsonResponse(404).setBody("{\"product\":{\"item\":{}}}"));
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findItemByTCIN(id);
-			}
-		};
+		Mono<ItemResponse> itemResponse = getService().findItemByTCIN(id);
 
 		// Then
-		assertThatExceptionOfType(WebClientResponseException.class).isThrownBy(tc);
+		StepVerifier.create(itemResponse).expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+		}).verify();
 	}
 
 	/************************ END INPUT VALIDATION *******************************/
@@ -308,15 +346,20 @@ public class ProductServiceTest {
 		enqueueProductNotFound(server);
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findByTcin(id);
-			}
-		};
+				Mono<Product> product = getService().findProductByTcin(id);
 
 		// Then
-		assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(tc);
+		StepVerifier.create(product)
+		.expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+			})
+		.verify();
 	}
 
 	@Test(timeout = 20000)
@@ -330,37 +373,43 @@ public class ProductServiceTest {
 		enqueueProductNotFound(server);
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findByTcin(id);
-			}
-		};
+		Mono<Product> product = getService().findProductByTcin(id);
 
 		// Then
-		assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(tc);
+		StepVerifier.create(product)
+		.expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+			})
+		.verify();
 	}
 
 	@Test(timeout = 20000)
 	public void givenItemIdAndPriceExists_WhenFindByTCIN_ThenReturnSingleProductWithPrice() throws Exception {
 		// Given
-		String id = "13860428";
+		int id = 13860428;
 		BigDecimal value = BigDecimal.valueOf(15.99);
 		String currency = "JPY";
-		when(getRepository().findByTcin(Mockito.anyInt()))
-				.thenReturn(Optional.of(new Price(Integer.valueOf(id), value, currency)));
+		when(getRepository().findByTcin(Mockito.anyInt())).thenReturn(Optional.of(new Price(id, value, currency)));
 		enqueueValidProduct(server);
 
 		// When
-		Product product = getService().findByTcin(id);
+		Mono<Product> product = getService().findProductByTcin(String.valueOf(id));
 		printJson(product);
 
 		// Then
-		assertTrue(product.getCurrent_price().isPresent());
-		assertEquals("The Big Lebowski (Blu-ray)", product.getItem().getName());
-		assertEquals(13860428L, product.getItem().getId());
-		assertEquals(value, product.getCurrent_price().get().getValue());
-		assertEquals(currency, product.getCurrent_price().get().getCurrency_code());
+		StepVerifier.create(product).assertNext(p -> {
+			assertEquals(id, p.getItem().getId());
+			assertEquals("The Big Lebowski (Blu-ray)", p.getItem().getName());
+			assertTrue(p.getCurrent_price().isPresent());
+			assertEquals(value, p.getCurrent_price().get().getValue());
+			assertEquals(currency, p.getCurrent_price().get().getCurrency_code());
+		}).expectComplete().verify();
 	}
 
 	@Test(timeout = 20000)
@@ -385,16 +434,18 @@ public class ProductServiceTest {
 	@Test(timeout = 20000)
 	public void givenItemIdExists_WhenFindItemByTCIN_ThenReturnItem() throws Exception {
 		// Given
-		String id = "13860428";
+		int id = 13860428;
 		enqueueValidProduct(getServer());
 
 		// When
-		Product product = getService().findByTcin(id);
+		Mono<Product> product = getService().findProductByTcin(String.valueOf(id));
 
 		// Then
-		assertTrue(product.getCurrent_price().isEmpty());
-		assertEquals("The Big Lebowski (Blu-ray)", product.getItem().getName());
-		assertEquals(13860428L, product.getItem().getId());
+		StepVerifier.create(product).assertNext(p -> {
+			assertEquals(id, p.getItem().getId());
+			assertEquals("The Big Lebowski (Blu-ray)", p.getItem().getName());
+			assertTrue(p.getCurrent_price().isEmpty());
+		}).expectComplete().verify();
 	}
 
 	@Test(timeout = 20000)
@@ -417,31 +468,36 @@ public class ProductServiceTest {
 		enqueueProductNotFound(server);
 
 		// When
-		ThrowingCallable tc = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				getService().findByTcin(id);
-			}
-		};
+		Mono<Product> product = getService().findProductByTcin(id);
 
 		// Then
-		assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(tc);
+		StepVerifier.create(product).expectErrorSatisfies(throwable -> {
+			assertThat(throwable instanceof WebClientResponseException).isTrue();
+			WebClientResponseException ex = (WebClientResponseException) throwable;
+			assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(ex.getRawStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+			assertThat(ex.getStatusText()).isEqualTo(HttpStatus.NOT_FOUND.getReasonPhrase());
+			assertThat(ex.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+			assertThat(ex.getResponseBodyAsString()).isEqualTo("{\"product\":{\"item\":{}}}");
+		}).verify();
 	}
 
 	@Test()
 	public void givenItemIdAndPriceNotExist_WhenFindByTCIN_ThenReturnSingleProductWithoutPrice() throws Exception {
 		// Given
 		when(getRepository().findByTcin(Mockito.anyInt())).thenReturn(Optional.empty());
-		String id = "13860428";
+		int id = 13860428;
 		enqueueValidProduct(getServer());
 
 		// When
-		Product product = getService().findByTcin(id);
+		Mono<Product> product = getService().findProductByTcin(String.valueOf(id));
 
 		// Then
-		assertTrue(product.getCurrent_price().isEmpty());
-		assertEquals("The Big Lebowski (Blu-ray)", product.getItem().getName());
-		assertEquals(13860428L, product.getItem().getId());
+		StepVerifier.create(product).assertNext(p -> {
+			assertEquals(id, p.getItem().getId());
+			assertEquals("The Big Lebowski (Blu-ray)", p.getItem().getName());
+			assertTrue(p.getCurrent_price().isEmpty());
+		}).expectComplete().verify();
 	}
 
 	private static MockResponse jsonResponse(int code) {

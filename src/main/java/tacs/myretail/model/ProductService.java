@@ -30,25 +30,14 @@ public class ProductService {
 		return this.priceRepository;
 	}
 	
-	/*package-private*/ Optional<Price> findPriceByTCIN(String tcin) throws NumberFormatException{
+	Optional<Price> findPriceByTCIN(String tcin) throws NumberFormatException{
 		Optional<Price> price = getRepository().findByTcin(Integer.valueOf(tcin));
 		return price;
 	}
-	public Mono<ItemResponse> findItemByTCIN(String tcin) throws NoSuchElementException {
+	Mono<ItemResponse> findItemByTCIN(String tcin) {
 		return getWebClient().get().uri(builder -> builder.build(tcin))
 				.retrieve()
 				.bodyToMono(ItemResponse.class);
-	}
-	public Product findByTcin(String tcin) {
-		try {
-		Optional<Price> currentPrice = findPriceByTCIN(tcin);
-		Mono<ItemResponse> item = Mono.just(new ItemResponse());//findItemByTCIN(tcin);
-
-		Product product = new Product(item.block().getItem(), currentPrice);
-		return product;
-		} catch (WebClientResponseException wce) {
-			throw new NoSuchElementException();
-		}
 	}
 //	@ExceptionHandler(WebClientResponseException.class)
 //	public ResponseEntity<String> handleWebClientResponseException(WebClientResponseException ex) {

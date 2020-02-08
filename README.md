@@ -34,9 +34,9 @@ To run the project outside of STS:
 
 ##### Running Tests
 
-`./gradlew build` to build and run unit tests with results saved to `build/reports/test/`
+`./gradlew build` to build and run unit tests with results saved to `build/reports/tests/test`
 
-`./gradlew integrationTest` to run integration tests with results save to `build/reports/integrationTest`
+`./gradlew integrationTest` to run integration tests with results save to `build/reports/tests/integrationTest`
 
 ##### Building/Running an Executable Jar
 

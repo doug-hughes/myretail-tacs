@@ -22,6 +22,7 @@ public class Application {
 	private MongoMappingContext mongoMappingContext;
 	
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
 //		System.out.printf("Application title is: %s%n", ctx.getBean("appTitle"));
 	}

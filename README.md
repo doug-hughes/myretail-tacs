@@ -80,6 +80,8 @@ Running in development we can populate some sample data by running
 curl http://localhost:8080/dev/prices/populate?query=kittens -X POST
 ```
 
+> Note: the /dev endpoints are filtered out of the executable jar, use /dev endpoints with bootRun via gradle or running via your IDE
+
 which will give us a list of identifiers that now have prices
 
 ```

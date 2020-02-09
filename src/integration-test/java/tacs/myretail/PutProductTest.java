@@ -32,6 +32,7 @@ public class PutProductTest extends RestClientTest {
 			// When
 			BigDecimal value = BigDecimal.valueOf(15.99);
 			currentPrice = savePrice(new Price(Integer.valueOf(id), BigDecimal.valueOf(1.00), "USD"));
+			// https://docs.spring.io/spring/docs/current/spring-framework-reference/pdf/testing-webtestclient.pdf
 			ResponseSpec response = getWebTestClient().put()
 				.uri("/products/{id}", id)
 				.accept(MediaType.APPLICATION_JSON)

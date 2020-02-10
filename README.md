@@ -58,6 +58,8 @@ When you are done running the jar, you may stop MongoDb by running `./gradlew st
 
 ##### Sample Interactions
 
+> In a powershell window for posting data use &curl and surround the -d argument with single (') quote instead of double (") quote
+
 We'll try with a product Id that represents *The Big Lebowski (Blu-ray)*
 
 ```
@@ -71,6 +73,22 @@ which will return
 ```
 
 If a current_price has not been added for the product it will not contain any pricing
+
+
+
+~~We can add a price for a product~~
+
+> /prices endpoint has not been added...yet
+
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"tcin\": 13860428, \"value\": 13.99, \"currency_code\": \"USD\"}" http://localhost:8080/prices
+```
+
+If the product already has a current_price, we can update the price through the /products url
+
+```
+curl -X PUT -H "Content-Type: application/json" -d "{\"value\": 1.00, \"currency_code\": \"USD\"}" http://localhost:8080/products/13860428
+```
 
 
 

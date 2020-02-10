@@ -9,13 +9,9 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import tacs.myretail.model.Price;
 
@@ -153,9 +149,4 @@ public class GetProductTest extends RestClientTest {
 		// cleanup
 		server.shutdown();
 	}
-///////////////////////////////////////////////////////////////// START UTILITY METHODS
-	private static MockResponse jsonResponse(int code) {
-		return new MockResponse().setResponseCode(code).setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-	}
-
 }

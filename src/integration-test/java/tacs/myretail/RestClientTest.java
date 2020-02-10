@@ -31,7 +31,7 @@ import tacs.myretail.model.PriceRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = { /*Config.class, */AppConfig.class, MongoConfig.class, Application.class })
-public class RestClientTest {
+public abstract class RestClientTest {
 	private static int mockPort;
 	@LocalServerPort
 	private int port;
@@ -69,7 +69,7 @@ public class RestClientTest {
 		return RestClientTest.mockPort;
 	}
 ///////////////////////////////////////////////////////////////// START UTILITY METHODS
-	private static MockResponse jsonResponse(int code) {
+	protected static MockResponse jsonResponse(int code) {
 		return new MockResponse().setResponseCode(code).setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
 	}
 

@@ -503,7 +503,7 @@ public class ProductServiceTest {
 	/** mocked lookup returns single valid item with tcin:"13860428" **/
 	private void enqueueValidProduct(MockWebServer server) throws URISyntaxException, IOException {
 		/* Get the response for the item lookup from file */
-		String resourceFileName = "RestClientTest-givenItemIdAndPriceNotExist_ThenReturnSingleProduct.json";
+		String resourceFileName = "GetProductTest-givenItemIdAndPriceNotExist_ThenReturnSingleProduct.json";
 		URL url = getClass().getClassLoader().getResource(resourceFileName);
 		Path path = Paths.get(url.toURI());
 		String jsonBody = Files.readString(path);

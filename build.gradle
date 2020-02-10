@@ -27,10 +27,6 @@ dependencies {
 //	implementation "org.springframework.boot:spring-boot-starter-web"
 	implementation "org.springframework.boot:spring-boot-starter-log4j2"
 	implementation "org.springframework.boot:spring-boot-starter-webflux"
-	// https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
-	// add -Dspring.hateoas.use-hal-as-default-json-media-type=false to prevent MVC autoconfig
-	// https://github.com/spring-projects/spring-boot/issues/19392
-	implementation group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '1.0.3.RELEASE'
 //	implementation "org.springframework.boot:spring-boot-starter-actuator"
 //	implementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
 	implementation "org.springframework.boot:spring-boot-starter-data-mongodb"

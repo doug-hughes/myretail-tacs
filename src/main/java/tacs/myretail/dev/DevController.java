@@ -33,8 +33,8 @@ public class DevController {
 				.build();
 		return itemWebClient.get().uri(builder -> builder.queryParam("keyword", query).build())
 			.retrieve()
-			.bodyToMono(SearchResponse.class)
-			.flatMapMany(sr -> Flux.fromIterable(sr.getSearch_response().getItems().getItem()))
+			.bodyToMono(SearchResult.class)
+			.flatMapMany(sr -> Flux.fromIterable(sr.getSearchResponse().getItems().getItem()))
 			.filter(item -> item.getTcin() > 0 && item.getCurrentRetail() != null)
 			.map(item -> priceRepository.findByTcin(item.getTcin())
 				.orElseGet(() -> {

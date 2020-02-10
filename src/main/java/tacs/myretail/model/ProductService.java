@@ -28,6 +28,16 @@ public class ProductService {
 		Optional<Price> price = getRepository().findByTcin(Integer.valueOf(tcin));
 		return price;
 	}
+
+	Optional<Price> replacePriceByTCIN(Price newPrice, String tcin) {
+		return findPriceByTCIN(tcin)
+			    .map(price -> {
+			    	price.setValue(newPrice.getValue());
+			    	price.setCurrency_code(newPrice.getCurrency_code());
+			      return getRepository().save(price);
+			    });
+		
+	}
 	Mono<ItemResponse> findItemByTCIN(String tcin) {
 		return getWebClient().get().uri(builder -> builder.build(tcin))
 				.retrieve()
@@ -41,6 +51,11 @@ public class ProductService {
 	public Mono<Product> findProductByTcin(String tcin) {
 		Mono<ItemResponse> mono = findItemByTCIN(tcin); 
 		Optional<Price> currentPrice = findPriceByTCIN(tcin);
+		return mono.map(ir -> new Product(ir.getItem(), currentPrice));
+	}
+	public Mono<Product> replaceCurrentPriceForProduct(Price newPrice, String tcin) {
+		Mono<ItemResponse> mono = findItemByTCIN(tcin);
+		Optional<Price> currentPrice = replacePriceByTCIN(newPrice, tcin);
 		return mono.map(ir -> new Product(ir.getItem(), currentPrice));
 	}
 }

@@ -35,7 +35,7 @@ public class ItemResponseTest {
 	@Test
 	public void given200_whenExtractItemResponse_thenValidItem() throws Exception {
 		// Given
-		String resourceFilename = "RestClientTest-givenItemIdAndPriceNotExist_ThenReturnSingleProduct.json";
+		String resourceFilename = "GetProductTest-givenItemIdAndPriceNotExist_ThenReturnSingleProduct.json";
 		Path path = Paths.get(getClass().getClassLoader().getResource(resourceFilename).toURI());
 		ClientResponse cr = ClientResponse.create(HttpStatus.OK).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(Files.readString(path)).build();
 		

@@ -3,6 +3,7 @@ package tacs.myretail.dev;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,28 +15,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
-public class SearchResponse {
-	private Search_Recommendations search_recommendations;
-	private Search_Response search_response;
+public class SearchResult {
+	@JsonAlias(value = {"search_recommendations"})
+	private SearchRecommendations searchRecommendations;
+	@JsonAlias(value = {"search_response"})
+	private SearchResponse searchResponse;
 
-	public Search_Response getSearch_response() {
-		return search_response;
+	public SearchResponse getSearchResponse() {
+		return searchResponse;
 	}
 
-	public Search_Recommendations getSearch_recommendations() {
-		return this.search_recommendations;
+	public SearchRecommendations getSearchRecommendations() {
+		return this.searchRecommendations;
 	}
 
 	@Override
 	public String toString() {
-		return "SearchResponse [search_recommendations=" + search_recommendations + ", search_response="
-				+ search_response + "]";
+		return "SearchResponse [search_recommendations=" + searchRecommendations + ", search_response="
+				+ searchResponse + "]";
 	}
 
 	// ************************** search_recommendation is a query string
 	// *********************************
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class Search_Recommendations {
+	public static class SearchRecommendations {
 
 		private String query;
 
@@ -49,7 +52,7 @@ public class SearchResponse {
 
 		@Override
 		public String toString() {
-			return "Search_Recommendations [query=" + query + "]";
+			return "SearchRecommendations [query=" + query + "]";
 		}
 
 	}
@@ -57,7 +60,7 @@ public class SearchResponse {
 	// ************************** search_response is a list of items
 	// *********************************
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class Search_Response {
+	public static class SearchResponse {
 
 		private Items items;
 
@@ -71,7 +74,7 @@ public class SearchResponse {
 
 		@Override
 		public String toString() {
-			return "Search_Response [items=" + items + "]";
+			return "SearchResponse [items=" + items + "]";
 		}
 	}
 
@@ -102,7 +105,7 @@ public class SearchResponse {
 			return price;
 		}
 		public BigDecimal getCurrentRetail() {
-			return price.getCurrent_retail();
+			return price.getCurrentRetail();
 		}
 
 		@Override
@@ -115,16 +118,17 @@ public class SearchResponse {
 	// ***************************************
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Price {
+		
+		@JsonAlias(value = {"current_retail"})
+		private BigDecimal currentRetail;
 
-		private BigDecimal current_retail;
-
-		public BigDecimal getCurrent_retail() {
-			return current_retail;
+		public BigDecimal getCurrentRetail() {
+			return currentRetail;
 		}
 
 		@Override
 		public String toString() {
-			return "Price [current_retail=" + current_retail + "]";
+			return "Price [current_retail=" + currentRetail + "]";
 		}
 	}
 }
